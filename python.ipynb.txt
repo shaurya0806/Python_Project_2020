@@ -1,0 +1,130 @@
+from tkinter import * # Tkinter: It provides wide APIs for GUI functionalities.
+import shutil         # Shutil: This module offers a number of high-level operations on files and collections of files.     
+import os # Os: utility module for OS interaction in programs.
+import import_ipynb
+import easygui      # easygui:  It allows us to select any file from the system
+from tkinter import filedialog    # Filedialog: This library is used for folder selection
+from tkinter import messagebox as mb     # Imageio: Used to read the file which is chosen by file box using a path
+from PIL import  ImageTk, Image
+# Funtion
+
+# open a file box window 
+# when we want to select a file
+def open_window():
+    read=easygui.fileopenbox()
+    return read
+
+# open file function
+def open_file():
+    string = open_window()
+    try:
+        os.startfile(string)
+    except:
+        mb.showinfo('confirmation', "File not found!")
+        
+# copy file function
+def copy_file():
+    source1 = open_window()
+    destination1=filedialog.askdirectory()
+    shutil.copy(source1,destination1)
+    mb.showinfo('confirmation', "File Copied !")
+    
+# delete file function
+def delete_file():
+    del_file = open_window()
+    if os.path.exists(del_file):
+        os.remove(del_file)             
+    else:
+        mb.showinfo('confirmation', "File not found !")
+
+# rename file function
+def rename_file():
+    chosenFile = open_window()
+    path1 = os.path.dirname(chosenFile)
+    extension=os.path.splitext(chosenFile)[1]
+    print("Enter new name for the chosen file")
+    newName=input()
+    path = os.path.join(path1, newName+extension)
+    print(path)
+    os.rename(chosenFile,path) 
+    mb.showinfo('confirmation', "File Renamed !")
+    
+# move file function
+def move_file():
+    source = open_window()
+    destination =filedialog.askdirectory()
+    if(source==destination):
+        mb.showinfo('confirmation', "Source and destination are same")
+    else:
+        shutil.move(source, destination)  
+        mb.showinfo('confirmation', "File Moved !")
+
+# function to make a new folder
+def make_folder():
+    newFolderPath = filedialog.askdirectory()
+    print("Enter name of new folder")
+
+    newFolder=input()
+    path = os.path.join(newFolderPath, newFolder)  
+
+    os.mkdir(path)
+    mb.showinfo('confirmation', "Folder created !")
+    
+# function to remove a folder
+def remove_folder():
+    delFolder = filedialog.askdirectory()
+    os.rmdir(delFolder)
+    mb.showinfo('confirmation', "Folder Deleted !")
+    
+# function to list all the files in folder
+def list_files():
+    folderList = filedialog.askdirectory()
+    sortlist=sorted(os.listdir(folderList))       
+    i=0
+    print("Files in ", folderList, "folder are:")
+    while(i<len(sortlist)):
+        print(sortlist[i]+'\n')
+        i+=1
+        
+#funtion for checkbutton
+
+
+        
+root = Tk()
+
+canvas=Canvas(root,width=1600,height=1000)
+
+image=ImageTk.PhotoImage(Image.open(r"C:\Users\HP\Desktop\img1.jpg"))
+
+canvas.create_image(0,0,anchor=NW,image=image)
+canvas.pack()
+
+root.geometry("150x400+100+120")
+
+root.title('File Manager')
+
+
+# creating label and buttons to perform operations
+Label(root, text=" File Manager ", font=("Arabic Transparent", 16,"bold"),fg="blue").place(relx=0.5, rely=0.03,anchor=CENTER)
+
+Button(root, text = "Open a File",bg='light blue', command = open_file).place(relx=0.5, rely=0.12,anchor=CENTER)
+
+Button(root, text = "Copy a File",bg='orange',command = copy_file).place(relx=0.5, rely=0.21,anchor=CENTER)
+
+Button(root, text = "Delete a File",bg='red', command = delete_file).place(relx=0.5, rely=0.30,anchor=CENTER)
+
+Button(root, text = "Rename a File",bg='purple', command = rename_file,fg="white").place(relx=0.5, rely=0.39,anchor=CENTER)
+
+Button(root, text = "Move a File",bg='yellow', command = move_file).place(relx=0.5, rely=0.48,anchor=CENTER)
+
+Button(root, text = "Make a Folder",bg='pink', command = make_folder).place(relx=0.5, rely=0.57,anchor=CENTER)
+
+Button(root, text = "Remove a Folder",bg='maroon',fg="white", command = remove_folder).place(relx=0.5, rely=0.66,anchor=CENTER)
+
+Button(root, text = "List all Files in Directory",bg='light blue',command = list_files).place(relx=0.5, rely=0.75,anchor=CENTER)
+
+Checkbutton(root,text="Close My File",command=root.destroy).place(relx=0.5, rely=0.84,anchor=CENTER)
+
+
+
+root.mainloop()
